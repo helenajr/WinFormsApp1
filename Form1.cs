@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.IO;
+using System.Security;
 
 namespace WinFormsApp1
 {
@@ -56,6 +57,48 @@ namespace WinFormsApp1
             writer.Close(); //This stops adding content to the file
             this.listBox1.Items.Clear(); //This clears the listbox
             addListItem("File Written to C:/Users/HRo/Desktop/TestFiles/KBTest.txt"); //This is the message displayed in the listbox
+        }
+
+        private void openFileDialog1_FileOk(object sender, CancelEventArgs e) //I'm not sure this function is doing anything, but the app won't work if I remove it.
+        {
+
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            this.listBox1.Items.Clear();// This clears the list box
+            if (openFileDialog1.ShowDialog() == DialogResult.OK) // This Opens the file dialog
+            {
+                try
+                {
+                    var filePath = openFileDialog1.FileName; // var tells the computer to figure out variable type for itself
+                    
+                    {
+                        StreamReader reader = new StreamReader(filePath); // This chooses the file to read and saves in reader
+                        try
+                        {
+                            do
+                            {
+                                addListItem(reader.ReadLine()); // Reads the whole content of the file
+                            }
+                            while (reader.Peek() != -1); // No ideas what this condition means
+                        }
+                        catch
+                        {
+                            addListItem("File is empty"); // What to display if there is nothing in the file
+                        }
+                        finally
+                        {
+                            reader.Close(); // Stops reading
+                        }
+                    }
+                }
+                catch (SecurityException ex) // I don't know what this security exception is about, but I've left it in
+                {
+                    MessageBox.Show($"Security error.\n\nError message: {ex.Message}\n\n" +
+                    $"Details:\n\n{ex.StackTrace}");
+                }
+            }
         }
     }
 }
