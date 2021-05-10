@@ -66,8 +66,8 @@ namespace WinFormsApp1
 
         private void button3_Click(object sender, EventArgs e)
         {
-            this.listBox1.Items.Clear();// This clears the list box
-            if (openFileDialog1.ShowDialog() == DialogResult.OK) // This Opens the file dialog
+           this.listBox1.Items.Clear();// This clears the list box
+           if (openFileDialog1.ShowDialog() == DialogResult.OK) // This Opens the file dialog
             {
                 try
                 {
@@ -100,5 +100,48 @@ namespace WinFormsApp1
                 }
             }
         }
+
+        private void button4_Click(object sender, EventArgs e) //Creates a new file and puts data from old file into it, overwrites existing file, rather than appends stuff to it.
+        {
+            this.listBox1.Items.Clear();// This clears the list box
+            if (openFileDialog1.ShowDialog() == DialogResult.OK) // This Opens the file dialog
+            {
+                try // This try...catch handles a security exception
+                {
+                    var filePath = openFileDialog1.FileName; // Initialises filepath varible. var tells the computer to figure out variable type for itself
+                    string fileName = Path.GetFileName(filePath);
+                    {
+                        StreamReader reader = new StreamReader(filePath); // This chooses the file to read and saves in reader
+                        StreamWriter writer = new StreamWriter("C:/Users/HRo/Desktop/TestFiles/NewFiles/Copy_" + fileName); //Creates new file and saves it in writer
+                        try
+                        {
+                            do
+                            {
+                                writer.WriteLine(reader.ReadLine()); // Writes the content of old file into new file line-by-line
+                            }
+                            while (reader.Peek() != -1); // Think this looks to see if there is  next line
+                        }
+                        catch
+                        {
+                            addListItem("File is empty"); // What to display if there is nothing in the file
+                        }
+                        finally
+                        {
+                            reader.Close(); // Stops reading
+                            writer.Close(); // Stops writing
+                            addListItem("File contents copied to new file in NewFiles folder"); //Message saying what has happened
+                        }
+                    }
+                }
+                catch (SecurityException ex) // I don't know what this security exception is about, but I've left it in
+                {
+                    MessageBox.Show($"Security error.\n\nError message: {ex.Message}\n\n" +
+                    $"Details:\n\n{ex.StackTrace}");
+                }
+            }
+        }
+
+        //For more about writing to files see https://docs.microsoft.com/en-us/dotnet/standard/io/how-to-write-text-to-a-file
+        
     }
 }
