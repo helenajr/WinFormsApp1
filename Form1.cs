@@ -45,7 +45,7 @@ namespace WinFormsApp1
             {
                 reader.Close(); // Stops reading
             }
-            
+
         }
         private void addListItem(string value)
         {
@@ -69,13 +69,13 @@ namespace WinFormsApp1
 
         private void button3_Click(object sender, EventArgs e)
         {
-           this.listBox1.Items.Clear();// This clears the list box
-           if (openFileDialog1.ShowDialog() == DialogResult.OK) // This Opens the file dialog
+            this.listBox1.Items.Clear();// This clears the list box
+            if (openFileDialog1.ShowDialog() == DialogResult.OK) // This Opens the file dialog
             {
                 try
                 {
                     var filePath = openFileDialog1.FileName; // var tells the computer to figure out variable type for itself
-                    
+
                     {
                         StreamReader reader = new StreamReader(filePath); // This chooses the file to read and saves in reader
                         try
@@ -146,14 +146,14 @@ namespace WinFormsApp1
         //For more about writing to files see https://docs.microsoft.com/en-us/dotnet/standard/io/how-to-write-text-to-a-file
         //For the excel stuff below see https://docs.microsoft.com/en-US/previous-versions/office/troubleshoot/office-developer/automate-excel-from-visual-c
 
-        
+
         private void button5_Click(object sender, EventArgs e)
         {
-            Excel.Application oXL;
-            Excel._Workbook oWB;
-            Excel._Worksheet oSheet;
-            Excel.Range oRng;
-            
+            Microsoft.Office.Interop.Excel.Application oXL;
+            Microsoft.Office.Interop.Excel._Workbook oWB;
+            Microsoft.Office.Interop.Excel._Worksheet oSheet;
+            Microsoft.Office.Interop.Excel.Range oRng;
+
 
             this.listBox1.Items.Clear();// This clears the list box
             if (openFileDialog1.ShowDialog() == DialogResult.OK) // This Opens the file dialog
@@ -165,19 +165,19 @@ namespace WinFormsApp1
                     try // Again, I do not know what this try....catch is for, but I've left it here
                     {
                         //Start Excel and get Application object.
-                        oXL = new Excel.Application();
+                        oXL = new Microsoft.Office.Interop.Excel.Application();
                         oXL.Visible = true;
 
                         //Open an existing workbook at the first sheet.
                         oWB = oXL.Workbooks.Open(filePath);
-                        oSheet = (Excel._Worksheet)oWB.ActiveSheet;
+                        oSheet = (Microsoft.Office.Interop.Excel._Worksheet)oWB.ActiveSheet;
 
                         //Apply a formula to get a thrid column and give column a name
                         oSheet.Cells[1, 3] = "Double number";
                         oRng = oSheet.get_Range("C2", "C8");
                         oRng.Formula = "=B2 * 2";
 
-                        
+
                         //Make sure Excel is visible and give the user control
                         //of Microsoft Excel's lifetime.
                         oXL.Visible = true;
@@ -200,14 +200,24 @@ namespace WinFormsApp1
                     $"Details:\n\n{ex.StackTrace}");
                 }
             }
-            
+
         }
 
-        
-
+        private void button6_Click(object sender, EventArgs e)
+        {
             
 
-          
+            DisplayCell();
+        }
+
+        public void DisplayCell()
+        {
+            
+           
+            Excel excel = new Excel("C:/Users/HRo/Desktop/TestFiles/ExcelFile.xlsx", 1);
+
+            addListItem(excel.ReadCell(0, 0));
+        }
     }
 
         
