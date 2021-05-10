@@ -9,6 +9,9 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.IO;
 using System.Security;
+using Excel = Microsoft.Office.Interop.Excel;
+using System.Reflection;
+
 
 namespace WinFormsApp1
 {
@@ -140,8 +143,74 @@ namespace WinFormsApp1
                 }
             }
         }
-
         //For more about writing to files see https://docs.microsoft.com/en-us/dotnet/standard/io/how-to-write-text-to-a-file
+        //For the excel stuff below see https://docs.microsoft.com/en-US/previous-versions/office/troubleshoot/office-developer/automate-excel-from-visual-c
+
         
+        private void button5_Click(object sender, EventArgs e)
+        {
+            Excel.Application oXL;
+            Excel._Workbook oWB;
+            Excel._Worksheet oSheet;
+            Excel.Range oRng;
+            
+
+            this.listBox1.Items.Clear();// This clears the list box
+            if (openFileDialog1.ShowDialog() == DialogResult.OK) // This Opens the file dialog
+            {
+                try // This try...catch handles a security exception
+                {
+                    var filePath = openFileDialog1.FileName; // Initialises filepath varible. var tells the computer to figure out variable type for itself
+                    string fileName = Path.GetFileName(filePath); // Gets the filename
+                    try // Again, I do not know what this try....catch is for, but I've left it here
+                    {
+                        //Start Excel and get Application object.
+                        oXL = new Excel.Application();
+                        oXL.Visible = true;
+
+                        //Open an existing workbook at the first sheet.
+                        oWB = oXL.Workbooks.Open(filePath);
+                        oSheet = (Excel._Worksheet)oWB.ActiveSheet;
+
+                        //Apply a formula to get a thrid column and give column a name
+                        oSheet.Cells[1, 3] = "Double number";
+                        oRng = oSheet.get_Range("C2", "C8");
+                        oRng.Formula = "=B2 * 2";
+
+                        
+                        //Make sure Excel is visible and give the user control
+                        //of Microsoft Excel's lifetime.
+                        oXL.Visible = true;
+                        oXL.UserControl = true;
+                    }
+                    catch (Exception theException)
+                    {
+                        String errorMessage;
+                        errorMessage = "Error: ";
+                        errorMessage = String.Concat(errorMessage, theException.Message);
+                        errorMessage = String.Concat(errorMessage, " Line: ");
+                        errorMessage = String.Concat(errorMessage, theException.Source);
+
+                        MessageBox.Show(errorMessage, "Error");
+                    }
+                }
+                catch (SecurityException ex)
+                {
+                    MessageBox.Show($"Security error.\n\nError message: {ex.Message}\n\n" +
+                    $"Details:\n\n{ex.StackTrace}");
+                }
+            }
+            
+        }
+
+        
+
+            
+
+          
     }
+
+        
+
+    
 }
