@@ -236,6 +236,23 @@ namespace WinFormsApp1
             string fileName = Path.GetFileName(filePath); // Gets the filename
             return fileName;
         }
+
+        public void WriteData()
+        {
+            string fp = ChooseFilePath(); // Uses function below to find file path
+            Excel excel = new Excel(fp, 1); // Creates a new instance of the Excel class
+
+            excel.WriteToCell(6, 6, "BOOM");           
+            excel.SaveAs(@"BOOM3.xlsx"); //The @ symbol adds the file path This PC/ My Documents
+
+            excel.Close();
+            addListItem("File with new content added saved in ThisPC/My Documents/ BOOM3.xlsx"); //Message saying what has happened
+        }
+
+        private void button7_Click(object sender, EventArgs e)
+        {
+            WriteData();
+        }
     }
 
         
