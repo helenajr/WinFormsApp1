@@ -203,20 +203,38 @@ namespace WinFormsApp1
 
         }
 
-        private void button6_Click(object sender, EventArgs e)
-        {
-            
-
+        private void button6_Click(object sender, EventArgs e) //This button displays the content of cell A1 in the listbox
+        {          
             DisplayCell();
         }
 
         public void DisplayCell()
         {
-            
-           
-            Excel excel = new Excel("C:/Users/HRo/Desktop/TestFiles/ExcelFile.xlsx", 1);
 
-            addListItem(excel.ReadCell(0, 0));
+            string fp = ChooseFilePath(); // Uses function below to find file path
+            Excel excel = new Excel(fp , 1); // Creates a new instance of the Excel class
+
+            addListItem(excel.ReadCell(0, 0)); // Uses the excel class function ReadCell and displays result in the listbox
+        }
+        public string ChooseFilePath() // Custom function to use whenever you need to obtain file path through the dialog box
+        {
+            if (openFileDialog1.ShowDialog() == DialogResult.OK)
+            {
+                var filePath = openFileDialog1.FileName; // Initialises filepath varible. var tells the computer to figure out variable type for itself
+                return filePath;
+            }
+            else
+            {
+                return "Error"; //All code paths need a string return for the function to work
+            }
+
+
+        }
+        public string ChooseFileName() // Custom function to use whenever you need to obtain file name through the dialog box
+        {
+            string filePath = ChooseFilePath();
+            string fileName = Path.GetFileName(filePath); // Gets the filename
+            return fileName;
         }
     }
 

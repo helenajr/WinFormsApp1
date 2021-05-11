@@ -12,14 +12,14 @@ namespace WinFormsApp1
         _Application excel = new _Excel.Application();
         Workbook wb;
         Worksheet ws;
-        public Excel(string path, int Sheet)
+        public Excel(string path, int Sheet) 
         {
             this.path = path;
             wb = excel.Workbooks.Open(path);
             ws = wb.Worksheets[Sheet];
         }
 
-        public string ReadCell(int i, int j)
+        public string ReadCell(int i, int j) //This is a method
         {
             i++; // This is good because excel starts at 1, not 0
             j++;
